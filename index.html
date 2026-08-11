@@ -3076,6 +3076,45 @@
                   h('button', { onClick: () => setSelectedStock(null), className: 'btn-secondary', style: { padding: '0.45rem 1.25rem' } }, '關閉分析視窗')
                 )
               )
+            ),
+
+            // Mobile Native Bottom Navigation Bar (手機專屬原生底部導覽列)
+            h('div', { className: 'mobile-bottom-nav' },
+              h('button', {
+                className: `mobile-nav-btn ${activeView === 'screener' ? 'active' : ''}`,
+                onClick: () => setActiveView('screener')
+              },
+                h('span', { style: { fontSize: '1.2rem' } }, '📊'),
+                h('span', null, '篩選主控')
+              ),
+              h('button', {
+                className: `mobile-nav-btn ${activeView === 'macro' ? 'active' : ''}`,
+                onClick: () => setActiveView('macro')
+              },
+                h('span', { style: { fontSize: '1.2rem' } }, '🌐'),
+                h('span', null, '全球總經')
+              ),
+              h('button', {
+                className: 'mobile-nav-btn',
+                onClick: () => setIsChatMinimized(!isChatMinimized)
+              },
+                h('span', { style: { fontSize: '1.2rem' } }, '💬'),
+                h('span', null, isChatMinimized ? '開啟AI' : '縮小AI')
+              ),
+              h('button', {
+                className: 'mobile-nav-btn',
+                onClick: () => setIsCompareOpen(true)
+              },
+                h('span', { style: { fontSize: '1.2rem' } }, '⚖️'),
+                h('span', null, `對比(${compareList.length})`)
+              ),
+              h('button', {
+                className: 'mobile-nav-btn',
+                onClick: () => setIsWatchlistOpen(true)
+              },
+                h('span', { style: { fontSize: '1.2rem' } }, '⭐'),
+                h('span', null, `觀察(${watchlist.length})`)
+              )
             )
           );
         }

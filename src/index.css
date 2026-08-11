@@ -314,3 +314,77 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
   box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
 }
+
+/* Mobile First Responsive Optimization (手機與行動裝置專屬排版) */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 75px !important;
+  }
+
+  .floating-chat-widget {
+    left: 8px !important;
+    right: 8px !important;
+    bottom: 72px !important;
+    width: auto !important;
+    max-height: 75vh !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8) !important;
+  }
+
+  .floating-chat-widget.minimized {
+    bottom: 72px !important;
+  }
+
+  .mobile-bottom-nav {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 62px;
+    background: rgba(13, 19, 34, 0.98);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    z-index: 2000;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 0.25rem;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+  }
+
+  .mobile-nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    font-weight: 600;
+    gap: 2px;
+    padding: 6px 0;
+    cursor: pointer;
+  }
+
+  .mobile-nav-btn.active {
+    color: #34d399;
+    font-weight: 800;
+  }
+
+  .glass-panel-interactive, .stock-card {
+    padding: 0.85rem !important;
+  }
+
+  button, select, input {
+    min-height: 38px;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-bottom-nav {
+    display: none !important;
+  }
+}
