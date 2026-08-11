@@ -963,18 +963,49 @@ def process_quant_backtest(items=None, years=3, budget=1000000, strategy_type="l
     if not items or not isinstance(items, list):
         items = cached_all_stocks[:4]
 
-    is_single_stock = (len(items) == 1)
-    target_name = items[0].get("name") if is_single_stock else f"{len(items)} 檔標的 AI 投資組合"
-    target_ticker = items[0].get("ticker") if is_single_stock else "PORTFOLIO"
+    valid_items = [item for item in items if isinstance(item, dict)]
+    if not valid_items:
+        valid_items = cached_all_stocks[:4]
+
+    is_single_stock = (len(valid_items) == 1)
+    target_name = valid_items[0].get("name", "標的") if is_single_stock else f"{len(valid_items)} 檔標的 AI 投資組合"
+    target_ticker = valid_items[0].get("ticker", "PORTFOLIO") if is_single_stock else "PORTFOLIO"
 
     years = max(1, min(5, int(years)))
     budget = float(budget) if budget else 1000000.0
     monthly_amount = float(monthly_amount) if monthly_amount else 10000.0
     total_months = years * 12
 
-    # Calculate portfolio or single stock weighted metrics
-    avg_roe = sum([item.get("roe", 15.0) * (item.get("weight", 1.0/len(items))) for item in items if isinstance(item, dict)]) if items else 15.0
-    avg_yield = sum([item.get("yield", 4.0) * (item.get("weight", 1.0/len(items))) for item in items if isinstance(item, dict)]) if items else 4.0
+    def parse_num(val, fallback=0.0):
+        if val is None:
+            return fallback
+        try:
+            if isinstance(val, str):
+                val = val.replace('%', '').strip()
+            return float(val)
+        except (ValueError, TypeError):
+            return fallback
+
+    n_items = len(valid_items)
+    default_w = 1.0 / n_items if n_items > 0 else 1.0
+
+    roe_list = []
+    yield_list = []
+
+    for item in valid_items:
+        w_raw = item.get("weight") if item.get("weight") is not None else item.get("weightPct")
+        w_val = parse_num(w_raw, default_w)
+        if w_val > 1.0:
+            w_val = w_val / 100.0
+
+        r_val = parse_num(item.get("roe"), 15.0)
+        y_val = parse_num(item.get("yield"), 4.0)
+
+        roe_list.append(r_val * w_val)
+        yield_list.append(y_val * w_val)
+
+    avg_roe = sum(roe_list) if roe_list else 15.0
+    avg_yield = sum(yield_list) if yield_list else 4.0
 
     # High growth for specific tickers (e.g. 2330, NVDA)
     if is_single_stock:

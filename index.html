@@ -1073,7 +1073,13 @@
             dripVal = null,
             bmVal = null
           ) => {
-            const targetItems = items !== null ? items : (backtestItems.length > 0 ? backtestItems : activePortfolioItems);
+            const targetItems = (items !== null && Array.isArray(items) && items.length > 0) 
+              ? items 
+              : (backtestItems && backtestItems.length > 0 
+                  ? backtestItems 
+                  : (activePortfolioItems && activePortfolioItems.length > 0 
+                      ? activePortfolioItems 
+                      : [{ ticker: '0050', name: '元大台灣50', price: 104.6, roe: 15.2, yield: 3.5, weight: 1.0 }]));
             const targetYears = years !== null ? years : backtestYears;
             const targetBudget = budget !== null ? budget : backtestBudget;
             const targetStrategy = strategy !== null ? strategy : backtestStrategy;
